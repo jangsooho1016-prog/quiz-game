@@ -13,6 +13,7 @@ Vite + React + TypeScript (TS 7), Vitest, oxlint. No external state-management l
 - `npm run test` — run all tests once (`npm run test:watch` for watch mode)
 - `npx vitest run src/game/ranking.test.ts` — one file; add `-t "<test name>"` for one test
 - `npm run build` — `tsc -b` type-check (includes test files) + Vite build
+- `npm run build:pages` — same, with `--base=/quiz-game/` for GitHub Pages (`jangsooho1016-prog/quiz-game`). Keep the base in this npm script: passing `--base=/quiz-game/` on the Git Bash command line gets rewritten to a Windows path.
 - `npm run lint` — oxlint
 - `npm run test:e2e` — Playwright (`e2e/*.e2e.ts`, config `playwright.config.ts`): builds, serves with `vite preview` on port 4174, and runs play-through, axe (WCAG 2.2 AA), and layout checks at 1280px and 360px in light and dark. Uses the installed Google Chrome (`channel: 'chrome'`); set `PW_CHANNEL=chromium` after `npx playwright install chromium` if Chrome is missing. E2E files are type-checked by `tsconfig.e2e.json`.
 - `npm run dev` — dev server

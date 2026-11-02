@@ -2,10 +2,12 @@
   "name": "quiz-game",
   "private": true,
   "version": "0.0.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "tsc -b && vite build --base=/quiz-game/",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
