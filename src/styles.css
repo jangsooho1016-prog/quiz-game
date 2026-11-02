@@ -1,0 +1,1078 @@
+/*
+ * OMR 답안지에서 가져온 시각 언어: 파란 인쇄 잉크(선·제목), 컴퓨터용 사인펜(채운 칸), 흰 종이.
+ * 문제 본문은 시험지처럼 명조(Noto Serif KR, 웹폰트), 나머지 UI는 시스템 한글 고딕(첫 로딩을 빠르게).
+ */
+:root {
+  --paper: #ffffff;
+  --field: #eef2fc;
+  --ink: #2b55c6;
+  --ink-line: #b7c6ef;
+  /* 입력칸·보기·선택지처럼 눌러야 하는 요소의 테두리. 배경 대비 3:1 이상 (WCAG 1.4.11) */
+  --control-line: #6b84cc;
+  --pen: #1b1d2a;
+  --text: #1b1d2a;
+  --muted: #565d75;
+  --correct: #12784a;
+  --correct-bg: #e4f3eb;
+  --wrong: #c0282b;
+  --wrong-bg: #fbe8e8;
+
+  --sans: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  --serif: 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif;
+
+  color-scheme: light;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  /* 한국어는 어절 단위로 줄을 바꾼다. 아주 긴 단어만 강제로 끊는다. */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #10162b;
+    --field: #18213f;
+    --ink: #8fa9ff;
+    --ink-line: #34447a;
+    --control-line: #5a6fb3;
+    --pen: #e8ecf8;
+    --text: #e8ecf8;
+    --muted: #a5aecb;
+    --correct: #62d39d;
+    --correct-bg: #11372a;
+    --wrong: #ff8f87;
+    --wrong-bg: #401c22;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+}
+
+h1,
+h2,
+p,
+ul,
+dl,
+dd {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- 공통 레이아웃 ---------- */
+
+.screen {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.actions--end {
+  justify-content: flex-end;
+}
+
+.button {
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--field);
+}
+
+.button--primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.button--primary:hover:not(:disabled) {
+  background: var(--ink);
+  filter: brightness(1.1);
+}
+
+.button:disabled {
+  border-color: var(--ink-line);
+  background: transparent;
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 0.75rem;
+}
+
+/* ---------- 시작 ---------- */
+
+.start__head {
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.start__title {
+  font-family: var(--serif);
+  font-size: clamp(2.25rem, 8vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.start__lead {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}
+
+.start__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field__label {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.field__input {
+  min-height: 52px;
+  padding: 0 1rem;
+  border: 2px solid var(--control-line);
+  border-radius: 6px;
+  background: var(--field);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.field__input:focus-visible {
+  border-color: var(--ink);
+  outline: none;
+}
+
+.field__input[aria-invalid='true'] {
+  border-color: var(--wrong);
+}
+
+.field__help {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.field__help--error {
+  color: var(--wrong);
+  font-weight: 600;
+}
+
+.rules__title {
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.rules__list {
+  padding-left: 1.2rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+/* ---------- 퀴즈 ---------- */
+
+.screen--quiz {
+  gap: 1.5rem;
+  padding-top: 1.25rem;
+}
+
+.quiz__bar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: end;
+  gap: 0.75rem 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.quiz__category {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.quiz__stats {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.quiz__stats dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.quiz__stats dd {
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* OMR 답안 칸: 40칸을 10칸씩 4묶음으로 */
+.sheet {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.sheet__group {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 2px;
+}
+
+.sheet__mark {
+  display: block;
+  aspect-ratio: 1 / 1.6;
+  max-height: 18px;
+  border: 1.5px solid var(--ink-line);
+  border-radius: 999px;
+  background: transparent;
+}
+
+.sheet__mark--current {
+  border-color: var(--ink);
+  border-width: 2px;
+}
+
+.sheet__mark--correct {
+  border-color: var(--pen);
+  background: var(--pen);
+}
+
+.sheet__mark--wrong {
+  border-color: var(--wrong);
+  background: linear-gradient(
+    to top right,
+    transparent calc(50% - 1px),
+    var(--wrong) calc(50% - 1px),
+    var(--wrong) calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+}
+
+.quiz__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.quiz__question {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 4.5vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.quiz__number {
+  color: var(--ink);
+}
+
+.options {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  min-height: 56px;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--control-line);
+  border-radius: 6px;
+  background: var(--paper);
+  text-align: left;
+  font-family: var(--serif);
+  font-size: 1.075rem;
+  cursor: pointer;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--field);
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.option__bubble {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 2.4rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.option__text {
+  flex: 1;
+  min-width: 8rem;
+}
+
+.option__tag {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* 고른 칸은 사인펜으로 칠한 것처럼 채운다 */
+.option--picked-correct .option__bubble,
+.option--picked-wrong .option__bubble {
+  border-color: var(--pen);
+  background: var(--pen);
+  color: var(--paper);
+  animation: fill-in 160ms ease-out;
+}
+
+.option--picked-correct,
+.option--answer {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.option--picked-correct .option__tag,
+.option--answer .option__tag {
+  color: var(--correct);
+}
+
+.option--answer .option__bubble {
+  border-color: var(--correct);
+  color: var(--correct);
+}
+
+.option--picked-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+}
+
+.option--picked-wrong .option__tag {
+  color: var(--wrong);
+}
+
+.option--dimmed {
+  opacity: 0.55;
+}
+
+@keyframes fill-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option__bubble {
+    animation: none !important;
+  }
+}
+
+.feedback-slot:empty {
+  display: none;
+}
+
+.feedback {
+  padding: 0.9rem 1rem;
+  border-left: 4px solid;
+  border-radius: 0 6px 6px 0;
+  background: var(--field);
+}
+
+.feedback--correct {
+  border-color: var(--correct);
+}
+
+.feedback--wrong {
+  border-color: var(--wrong);
+}
+
+.feedback__verdict {
+  font-weight: 700;
+}
+
+.feedback--correct .feedback__verdict {
+  color: var(--correct);
+}
+
+.feedback--wrong .feedback__verdict {
+  color: var(--wrong);
+}
+
+.feedback__explanation {
+  margin-top: 0.35rem;
+  font-family: var(--serif);
+  line-height: 1.7;
+}
+
+/* ---------- 결과 ---------- */
+
+.result__head {
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.result__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.result__score {
+  margin-top: 0.25rem;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.result__score strong {
+  font-size: clamp(3.5rem, 16vw, 5rem);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.result__max {
+  font-size: 1.125rem;
+  color: var(--muted);
+}
+
+.result__facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.result__facts dt {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.result__facts dd {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.notice {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--wrong);
+  background: var(--wrong-bg);
+  font-size: 0.95rem;
+}
+
+.categories {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.categories__row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr 3.5rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.categories__name {
+  font-weight: 600;
+}
+
+.categories__marks {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+  max-width: 16rem;
+}
+
+.categories__count {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 랭킹 ---------- */
+
+.ranking__title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.ranking__lead {
+  margin-top: -1rem;
+  color: var(--muted);
+}
+
+.empty {
+  padding: 1.5rem 1rem;
+  border: 2px dashed var(--ink-line);
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+.ranking {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.ranking th,
+.ranking td {
+  padding: 0.65rem 0.4rem;
+  border-bottom: 1px solid var(--ink-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.ranking thead th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid var(--ink);
+}
+
+.ranking .num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ranking__rank {
+  width: 2.5rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ranking__name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ranking__me {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.ranking__row--mine {
+  background: var(--field);
+}
+
+@media (max-width: 480px) {
+  .sheet {
+    gap: 0.35rem;
+  }
+
+  .sheet__group {
+    gap: 1px;
+  }
+
+  .result__facts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ranking {
+    font-size: 0.875rem;
+  }
+
+  .ranking th,
+  .ranking td {
+    padding: 0.55rem 0.25rem;
+  }
+
+  .categories__row {
+    grid-template-columns: 4.5rem 1fr 3rem;
+    gap: 0.5rem;
+  }
+}
+
+/* ---------- 공통 페이지 제목 ---------- */
+
+.page-title {
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.page-lead {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* ---------- 카테고리 전환 안내 (F-08) ---------- */
+
+.transition {
+  margin-bottom: -0.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--field);
+}
+
+.transition strong {
+  color: var(--ink);
+}
+
+/* ---------- 제한 시간 (F-09) ---------- */
+
+.timer {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.timer__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer__track {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--field);
+  overflow: hidden;
+}
+
+.timer__fill {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  transform-origin: left center;
+  transition: transform 100ms linear;
+}
+
+.timer--warning .timer__label {
+  color: var(--wrong);
+}
+
+.timer--warning .timer__fill {
+  background: var(--wrong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timer__fill {
+    transition: none;
+  }
+}
+
+/* ---------- 틀린 문제 다시 보기 (F-14) ---------- */
+
+.review {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.review__item {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--ink-line);
+}
+
+.review__meta {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.review__question {
+  margin: 0.3rem 0 0.75rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.review__answers {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.review__row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.review__row dt {
+  font-weight: 700;
+}
+
+.review__row--mine {
+  background: var(--wrong-bg);
+}
+
+.review__row--mine dt {
+  color: var(--wrong);
+}
+
+.review__row--correct {
+  background: var(--correct-bg);
+}
+
+.review__row--correct dt {
+  color: var(--correct);
+}
+
+.review__explanation {
+  margin-top: 0.75rem;
+  font-family: var(--serif);
+  line-height: 1.7;
+}
+
+/* ---------- 효과음 버튼, 정답 애니메이션 (F-18) ---------- */
+
+.sound-toggle {
+  min-height: 44px;
+  padding: 0 0.7rem;
+  border: 1.5px solid var(--control-line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sound-toggle[aria-pressed='true'] {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* 정답이면 채점 도장을 찍듯 ✓가 한 번 눌려 들어온다 */
+.feedback__icon {
+  display: inline-block;
+}
+
+.feedback--correct .feedback__icon {
+  animation: stamp 320ms cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.option--picked-correct {
+  animation: correct-ring 480ms ease-out;
+}
+
+@keyframes stamp {
+  from {
+    transform: scale(2.4) rotate(-12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes correct-ring {
+  from {
+    box-shadow: 0 0 0 0 var(--correct);
+  }
+  to {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedback--correct .feedback__icon,
+  .option--picked-correct {
+    animation: none;
+  }
+}
+
+/* ---------- 랭킹 탭 (F-16) ---------- */
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: -0.75rem;
+  border-bottom: 2px solid var(--ink);
+  overflow-x: auto;
+}
+
+.tabs__tab {
+  flex: none;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border: 2px solid transparent;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabs__tab:hover {
+  color: var(--ink);
+}
+
+.tabs__tab[aria-selected='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 480px) {
+  .tabs__tab {
+    padding: 0 0.55rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ---------- 게임 방식 선택 (카테고리 연습) ---------- */
+
+.choice {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: none;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.choice legend {
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.choice--inline {
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+}
+
+.choice--inline legend {
+  grid-column: 1 / -1;
+}
+
+.choice__option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.4rem 0.9rem;
+  border: 2px solid var(--control-line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.choice__option:has(input:checked) {
+  border-color: var(--ink);
+  background: var(--field);
+  font-weight: 600;
+}
+
+.choice__option input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.choice__note {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* ---------- 빠른 정답 보너스 표시 ---------- */
+
+.feedback__points {
+  margin-top: 0.15rem;
+  font-weight: 700;
+  color: var(--correct);
+  font-variant-numeric: tabular-nums;
+}
+
+.result__breakdown {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 연습 모드처럼 묶음이 하나뿐이어도 칸이 지나치게 넓어지지 않게 */
+.sheet__group {
+  max-width: 12rem;
+}
+
+/* ---------- 통계 ---------- */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+.metric {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem;
+  border: 2px solid var(--ink-line);
+  border-radius: 6px;
+}
+
+.metric__label {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.metric__value {
+  font-family: var(--serif);
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric__detail {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.metric__goal {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.metric__goal--met {
+  color: var(--correct);
+}
+
+.metric__goal--miss {
+  color: var(--wrong);
+}
+
+.stats__note {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.stats-table__question {
+  font-weight: 400;
+  font-family: var(--serif);
+  overflow-wrap: anywhere;
+}
+
+.stats-table__meta {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stats-table__status {
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.stats-table__row--too-hard .stats-table__status,
+.stats-table__row--too-easy .stats-table__status {
+  color: var(--wrong);
+}
+
+.stats-table__row--ok .stats-table__status {
+  color: var(--correct);
+}
+
+.stats-table__row--insufficient .stats-table__status {
+  color: var(--muted);
+}
+
+/* ---------- 문제 파일을 받는 중 / 실패 (시작 화면) ---------- */
+
+.start__status {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.notice__action {
+  margin-top: 0.6rem;
+}
+
+/* 연습 모드의 "제한 시간 없이 풀기" 체크 상자 */
+.choice__option--single {
+  margin-bottom: 0.75rem;
+}
+
+.choice__option--single input {
+  flex: none;
+}

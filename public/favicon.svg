@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- OMR 답안지의 한 줄: 파란 인쇄 칸 네 개 중 하나를 사인펜으로 칠했다 -->
+  <style>
+    .paper { fill: #ffffff; stroke: #2b55c6; }
+    .bubble { fill: none; stroke: #2b55c6; }
+    .filled { fill: #1b1d2a; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #10162b; stroke: #8fa9ff; }
+      .bubble { stroke: #8fa9ff; }
+      .filled { fill: #e8ecf8; }
+    }
+  </style>
+  <rect class="paper" x="1.5" y="1.5" width="29" height="29" rx="5" stroke-width="2" />
+  <rect class="bubble" x="5" y="8" width="4.5" height="16" rx="2.25" stroke-width="1.6" />
+  <rect class="filled" x="11.1" y="8" width="4.5" height="16" rx="2.25" />
+  <rect class="bubble" x="17.2" y="8" width="4.5" height="16" rx="2.25" stroke-width="1.6" />
+  <rect class="bubble" x="23.3" y="8" width="4.5" height="16" rx="2.25" stroke-width="1.6" />
+</svg>
